@@ -29,39 +29,47 @@
             ['Blog', route('blog.index')],
             ['Contact', route('contact')],
         ];
+    $socials = array_filter((array) config('safebuy.social', []));
+    $hasContact = (bool) (config('safebuy.phone') || config('safebuy.email') || $socials);
+    $hasLocation = (bool) (config('safebuy.address') || config('safebuy.hours'));
 @endphp
 <footer class="foot rv" data-reveal id="contact">
-    <div class="wrap fgrid">
+    <div @class(['wrap fgrid', 'fgrid-3' => ! $hasLocation])>
         <div class="st" style="--sd: .05s">
             <span class="flogo"><img src="{{ asset(config('safebuy.logo', 'images/brand/safebuy-logo.webp')) }}" alt="{{ config('safebuy.shop_name', 'SafeBuy') }}" width="150" height="48"></span>
             <p class="ftag">Safe to Buy, Smart to Trust.</p>
-            <h4>Contact Us</h4>
-            @if (config('safebuy.phone'))
-                <a class="fcall" href="tel:{{ preg_replace('/\s+/', '', config('safebuy.phone')) }}">
-                    <span><x-icon name="phone" size="18" /></span>
-                    <span><small>Call us</small><b>{{ config('safebuy.phone') }}</b></span>
-                </a>
-            @endif
-            <div class="fline"><x-icon name="mail" size="16" stroke="1.7" /><a href="mailto:{{ config('safebuy.email') }}">{{ config('safebuy.email') }}</a></div>
-            @php
-                $socials = array_filter((array) config('safebuy.social', []));
-            @endphp
-            @if ($socials)
-                <div class="fline" style="gap:10px;margin-top:8px;flex-wrap:wrap">
-                    @foreach ($socials as $net => $url)
-                        <a href="{{ $net === 'whatsapp' && ! str_starts_with($url, 'http') ? 'https://wa.me/'.preg_replace('/\D/', '', $url) : $url }}" target="_blank" rel="noopener" style="text-transform:capitalize;text-decoration:underline">{{ $net }}</a>
-                    @endforeach
-                </div>
-            @endif
-        </div>
-        <div class="st" style="--sd: .15s">
-            <h4>Store Location</h4>
-            <div class="fline"><x-icon name="pin" size="16" stroke="1.7" />{{ config('safebuy.address') }}</div>
-            @if (config('safebuy.hours'))
-                <h4 class="fh-gap">Open Hours</h4>
-                <div class="fline"><x-icon name="clock" size="16" stroke="1.7" />{{ config('safebuy.hours') }}</div>
+            @if ($hasContact)
+                <h4>Contact Us</h4>
+                @if (config('safebuy.phone'))
+                    <a class="fcall" href="tel:{{ preg_replace('/\s+/', '', config('safebuy.phone')) }}">
+                        <span><x-icon name="phone" size="18" /></span>
+                        <span><small>Call us</small><b>{{ config('safebuy.phone') }}</b></span>
+                    </a>
+                @endif
+                @if (config('safebuy.email'))
+                    <div class="fline"><x-icon name="mail" size="16" stroke="1.7" /><a href="mailto:{{ config('safebuy.email') }}">{{ config('safebuy.email') }}</a></div>
+                @endif
+                @if ($socials)
+                    <div class="fline" style="gap:10px;margin-top:8px;flex-wrap:wrap">
+                        @foreach ($socials as $net => $url)
+                            <a href="{{ $net === 'whatsapp' && ! str_starts_with($url, 'http') ? 'https://wa.me/'.preg_replace('/\D/', '', $url) : $url }}" target="_blank" rel="noopener" style="text-transform:capitalize;text-decoration:underline">{{ $net }}</a>
+                        @endforeach
+                    </div>
+                @endif
             @endif
         </div>
+        @if ($hasLocation)
+            <div class="st" style="--sd: .15s">
+                @if (config('safebuy.address'))
+                    <h4>Store Location</h4>
+                    <div class="fline"><x-icon name="pin" size="16" stroke="1.7" />{{ config('safebuy.address') }}</div>
+                @endif
+                @if (config('safebuy.hours'))
+                    <h4 @class(['fh-gap' => (bool) config('safebuy.address')])>Open Hours</h4>
+                    <div class="fline"><x-icon name="clock" size="16" stroke="1.7" />{{ config('safebuy.hours') }}</div>
+                @endif
+            </div>
+        @endif
         <div class="st" style="--sd: .25s">
             <h4>Quick Links</h4>
             <ul>

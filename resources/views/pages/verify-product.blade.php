@@ -23,6 +23,13 @@
                 <div class="cp-alert ok">Found {{ $matches->count() }} verified SafeBuy catalog {{ \Illuminate\Support\Str::plural('item', $matches->count()) }} matching “{{ $q }}”.</div>
                 <div class="verify-grid" data-stagger="0.06">
                     @foreach ($matches as $p)
+                        @php
+                            $variantSkus = $p->variants->pluck('sku')->filter()->values();
+                            $matchedVariantSkus = $variantSkus->filter(fn ($s) => stripos($s, $q) !== false)->values();
+                            $displaySku = $matchedVariantSkus->isNotEmpty()
+                                ? $matchedVariantSkus->implode(', ')
+                                : ($p->sku ?: ($variantSkus->isNotEmpty() ? $variantSkus->implode(', ') : 'N/A'));
+                        @endphp
                         <a class="verify-card" href="{{ route('product.show', $p) }}">
                             <img src="{{ asset($p->image) }}" alt="{{ $p->name }}" width="80" height="80" loading="lazy" decoding="async">
                             <div>
@@ -30,7 +37,7 @@
                                 <h3>{{ $p->name }}</h3>
                                 <small>
                                     {{ $p->brand?->name ? $p->brand->name.' · ' : '' }}
-                                    SKU: {{ $p->sku ?: 'N/A' }}
+                                    SKU: {{ $displaySku }}
                                     {{ $p->origin ? ' · Origin: '.$p->origin : '' }}
                                 </small>
                                 <strong>{{ $p->priceLabel() }}</strong>

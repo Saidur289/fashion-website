@@ -142,7 +142,63 @@ class ContentPagesTest extends TestCase
         $this->get('/verify-product?q=SB-BOJ-50ML')
             ->assertOk()
             ->assertSee('Beauty of Joseon Relief Sun')
+            ->assertSee('SKU: SB-BOJ-50ML')
             ->assertSee('Official SafeBuy Item');
+
+        $variable = Product::create([
+            'category_id' => $cat->id,
+            'name' => 'Rice Water Cleanser',
+            'slug' => 'rice-water-cleanser',
+            'sku' => null,
+            'price' => 735,
+            'origin' => 'South Korea',
+            'image' => 'images/brand/safebuy-logo.webp',
+            'is_active' => true,
+        ]);
+        $variable->variants()->create([
+            'sku' => '8800335745940',
+            'price' => 999,
+            'stock' => 10,
+            'is_active' => true,
+        ]);
+
+        $this->get('/verify-product?q=8800335745940')
+            ->assertOk()
+            ->assertSee('Rice Water Cleanser')
+            ->assertSee('SKU: 8800335745940')
+            ->assertDontSee('SKU: N/A');
+    }
+
+    public function test_footer_hides_empty_contact_email_and_location_and_wishlist_has_empty_slot(): void
+    {
+        config([
+            'safebuy.email' => '',
+            'safebuy.address' => '',
+            'safebuy.phone' => '',
+            'safebuy.hours' => '',
+            'safebuy.social' => [],
+        ]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('href="mailto:"', false)
+            ->assertDontSee('<h4>Store Location</h4>', false)
+            ->assertSee('fgrid-3');
+
+        $cat = Category::create(['name' => 'Sunscreen', 'slug' => 'sunscreen', 'group' => 'beauty']);
+        $p = Product::create([
+            'category_id' => $cat->id,
+            'name' => 'Test Sun Cream',
+            'slug' => 'test-sun-cream',
+            'price' => 420,
+            'image' => 'images/brand/safebuy-logo.webp',
+            'is_active' => true,
+        ]);
+
+        $this->get('/wishlist?ids='.$p->id)
+            ->assertOk()
+            ->assertSee('Test Sun Cream')
+            ->assertSee('data-wish-empty', false);
     }
 
     public function test_admin_content_and_inbox_resources_enforce_roles(): void

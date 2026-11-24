@@ -383,13 +383,26 @@
     if (heart) {
       var wid = heart.getAttribute('data-wish');
       var i = wish.indexOf(wid);
+      var forceRemove = heart.hasAttribute('data-wish-remove');
       var done = function (on) {
         renderCounts('wish');
         toast(on ? 'Saved to wishlist' : 'Removed from wishlist');
-        if (!on && heart.hasAttribute('data-wish-remove')) {
+        if (!on && forceRemove) {
           var card = heart.closest('.wcard');
           if (card) card.remove();
-          if (!$('.wcard')) location.reload();
+          var page = $('[data-wishlist-page]');
+          if (page && page.hasAttribute('data-guest')) {
+            var remaining = $$('.wcard [data-wish]', page).map(function (el) { return el.getAttribute('data-wish'); });
+            var nextUrl = SB.routes.wishlist + (remaining.length ? '?ids=' + remaining.join(',') : '');
+            history.replaceState(null, '', nextUrl);
+          }
+          if (!$('.wcard')) {
+            var grid = $('.wgrid', page || document);
+            if (grid) grid.remove();
+            var emptyEl = $('[data-wish-empty]', page || document);
+            if (emptyEl) emptyEl.hidden = false;
+            else location.replace(SB.routes.wishlist);
+          }
         }
       };
       if (SB.user) {
@@ -401,9 +414,15 @@
           .then(function (d) { wish = d.ids || wish; done(!!d.on); })
           .catch(function () { toast('Could not update your wishlist. Please try again.'); });
       } else {
-        if (i === -1) wish.push(wid); else wish.splice(i, 1);
-        store.set('sb_wish', wish);
-        done(i === -1);
+        if (forceRemove) {
+          if (i !== -1) wish.splice(i, 1);
+          store.set('sb_wish', wish);
+          done(false);
+        } else {
+          if (i === -1) wish.push(wid); else wish.splice(i, 1);
+          store.set('sb_wish', wish);
+          done(i === -1);
+        }
       }
       return;
     }

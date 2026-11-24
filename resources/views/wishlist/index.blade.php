@@ -11,14 +11,14 @@
         <p class="alert">Your wishlist is saved in this browser. <a class="tlink" href="{{ route('login', ['redirect' => route('wishlist')]) }}">Log in</a> to keep it on your account.</p>
     @endif
 
-    @if ($items->isEmpty())
-        <div class="empty">
-            <x-icon name="heart" size="40" />
-            <h2>No products added to the wishlist</h2>
-            <p>Tap the heart on any product to save it here.</p>
-            <a class="btn orange" href="{{ route('shop') }}">Browse the shop <x-icon name="arrow-right" size="16" /></a>
-        </div>
-    @else
+    <div class="empty" data-wish-empty @if ($items->isNotEmpty()) hidden @endif>
+        <x-icon name="heart" size="40" />
+        <h2>No products added to the wishlist</h2>
+        <p>Tap the heart on any product to save it here.</p>
+        <a class="btn orange" href="{{ route('shop') }}">Browse the shop <x-icon name="arrow-right" size="16" /></a>
+    </div>
+
+    @if ($items->isNotEmpty())
         <ul class="wgrid" data-stagger="0.06">
             @foreach ($items as ['product' => $p, 'variant' => $v])
                 @php

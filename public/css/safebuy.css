@@ -582,6 +582,7 @@ body.hero-static .slide .a-eye,body.hero-static .slide .a-tit,body.hero-static .
 /* ---------- footer ---------- */
 .foot{background:var(--blue-d);color:rgba(255,255,255,.86);border-radius:0;margin-top:24px}
 .fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.4fr;gap:44px;padding:72px 24px 48px}
+.fgrid-3{grid-template-columns:1.3fr 1fr 1.4fr}
 .flogo{display:inline-block;background:#fff;padding:8px 16px;border-radius:999px}
 .flogo img{height:38px;width:auto;display:block}
 .ftag{margin:12px 0 22px;font-size:14px}
@@ -608,7 +609,7 @@ body.hero-static .slide .a-eye,body.hero-static .slide .a-tit,body.hero-static .
 .pay span{background:#fff;padding:5px 12px;border-radius:10px;display:flex;align-items:center}
 .pay img{height:26px;width:auto;display:block}
 .fbot{border-top:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.12)}
-.fbot-in{padding-top:18px;padding-bottom:18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px}
+.fbot-in{padding-top:18px;padding-bottom:18px;padding-right:84px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px}
 .fbot nav{display:flex;gap:22px}
 
 /* ---------- mobile nav + back to top ---------- */
@@ -645,7 +646,6 @@ body.hero-static .slide .a-eye,body.hero-static .slide .a-tit,body.hero-static .
   .routine .inner{gap:40px}
   .rbars{grid-template-columns:1fr}
   .fgrid{grid-template-columns:1fr 1fr}
-  .fbot-in{padding-right:76px}
 }
 @media (max-width:760px){
   body.sb{font-size:14px;padding-bottom:84px}
