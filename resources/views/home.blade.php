@@ -69,14 +69,14 @@
                                 @if ($slide->image_primary)
                                     <div class="hero-layer s1-model-wrap">
                                         <div class="anim-float-x">
-                                            <img src="{{ asset($slide->image_primary) }}" alt="{{ $slide->title }}" decoding="async" @if ($loop->first) fetchpriority="high" @endif>
+                                            <img src="{{ asset($slide->image_primary) }}?v={{ @filemtime(public_path($slide->image_primary)) ?: 1 }}" alt="{{ $slide->title }}" decoding="async" @if ($loop->first) fetchpriority="high" @endif>
                                         </div>
                                     </div>
                                 @endif
                                 @if ($slide->image_secondary)
                                     <div class="hero-layer s1-products-wrap">
                                         <div class="anim-float-x-slow">
-                                            <img src="{{ asset($slide->image_secondary) }}" alt="{{ $slide->title }}" decoding="async" @if ($loop->first) fetchpriority="high" @endif>
+                                            <img src="{{ asset($slide->image_secondary) }}?v={{ @filemtime(public_path($slide->image_secondary)) ?: 1 }}" alt="{{ $slide->title }}" decoding="async" @if ($loop->first) fetchpriority="high" @endif>
                                         </div>
                                     </div>
                                 @endif
@@ -151,82 +151,88 @@
             @break
 
         @case('categories')
-            {{-- ================= CATEGORIES ================= --}}
-            <section class="sec rv" data-reveal aria-labelledby="t-cats">
-                <div class="wrap">
-                    <div class="shead">
-                        @if ($section->eyebrow)<div class="eyebrow">{{ $section->eyebrow }}</div>@endif
-                        <h2 class="stitle" id="t-cats">{{ $section->title ?: 'Beauty & Lifestyle Essentials' }}</h2>
-                        <x-squiggle />
+            {{-- ================= BEAUTY & LIFESTYLE ESSENTIALS (safebuystore.com match) ================= --}}
+            <section class="sb-mid-sec sb-ess rv" data-reveal aria-labelledby="t-cats" id="beauty-essentials">
+                <div class="sb-mid-wrap">
+                    <div class="sb-ess-head">
+                        <h2 class="sb-sec-title" id="t-cats">{{ $section->title ?: 'Beauty & Lifestyle Essentials' }}</h2>
+                        <svg class="sb-wave" viewBox="0 0 64 12" fill="none" aria-hidden="true">
+                            <path d="M2 7c6-6 12-6 18 0s12 6 18 0 12-6 18 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
                     </div>
-                    <ul class="cats">
-                        @foreach ($categories as $category)
-                            <li class="st" style="--sd: {{ number_format($loop->index * 0.07, 2) }}s">
-                                <a class="catc" href="{{ route('category.show', $category) }}">
-                                    <span class="cbg"><img src="{{ asset($category->image) }}" alt="" loading="lazy" width="400" height="400"></span>
-                                    <span class="cname">{{ $category->name }}</span>
-                                    @if ($category->products_min_price)
-                                        <span class="cfrom">Starts from <b>{{ \App\Models\Product::taka($category->products_min_price) }}</b></span>
-                                    @endif
-                                    <span class="clink">{{ $category->products_count }} {{ Str::plural('product', $category->products_count) }} <x-icon name="arrow-right" size="14" /></span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+                    <div class="sb-ess-grid">
+                        <a class="sb-ess-card st" style="--sd: .06s" href="{{ route('shop', ['group' => 'beauty']) }}">
+                            <div class="sb-ess-img">
+                                <img src="{{ asset('images/banners/cat-kbeauty.webp') }}" alt="K-Beauty" loading="lazy" width="600" height="600">
+                            </div>
+                            <div class="sb-ess-body">
+                                <h3>K-Beauty</h3>
+                                <p>100% Authentic Care</p>
+                                <span class="sb-ess-cta">Shop now</span>
+                            </div>
+                        </a>
+                        <a class="sb-ess-card st" style="--sd: .14s" href="{{ route('shop', ['group' => 'gadget']) }}">
+                            <div class="sb-ess-img">
+                                <img src="{{ asset('images/banners/cat-lifestyle.webp') }}" alt="Smart Lifestyle" loading="lazy" width="600" height="600">
+                            </div>
+                            <div class="sb-ess-body">
+                                <h3>Smart Lifestyle</h3>
+                                <p>Upgrade Your Life</p>
+                                <span class="sb-ess-cta">Shop now</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </section>
             @break
 
         @case('promo')
-            {{-- ================= PROMO ================= --}}
-            <section class="promo rv" data-reveal aria-labelledby="t-promo">
-                <div class="wrap inner">
-                    <div>
-                        <div class="eyebrow st" style="--sd: .1s">{{ $promoBanner?->eyebrow ?: 'Smart Choice, Safe Shopping' }}</div>
-                        <h2 class="ptitle st" id="t-promo" style="--sd: .25s">{{ $promoBanner?->title ?: 'Where Premium K-Beauty Meets Next-Gen Gadgets.' }}</h2>
-                        @if ($maxDiscount)
-                            <p class="deal st" style="--sd: .4s"><span>Up to</span><b>{{ $maxDiscount }}% off</b><span>on new arrivals</span></p>
-                        @endif
-                        <p class="pcopy st" style="--sd: .5s">{{ $promoBanner?->subtitle ?: 'Get the best of both worlds. Grab 100% original Korean skincare and premium tech gadgets at unbeatable prices.' }}</p>
-                        <a class="btn st" style="--sd: .65s" href="{{ $promoBanner?->cta_url ? url($promoBanner->cta_url) : route('shop', ['on_sale' => 1]) }}">{{ $promoBanner?->cta_label ?: 'Shop now' }} <x-icon name="arrow-right" size="16" /></a>
-                    </div>
-                    <div class="pstage">
-                        <div class="disc"></div>
-                        <div class="pos" style="left: 4%; top: 10%; width: 92%"><div class="floaty"><img src="{{ asset($promoBanner?->image ?: 'images/banners/offer-right.png') }}" alt="K-Beauty serum, cream, smart watch, earbuds and headphones" loading="lazy" width="577" height="433"></div></div>
-                        <x-leaf style="left: 84%; top: 2%; --r: 40deg; --d: .4s" />
-                        <x-leaf style="left: 4%; top: 64%; width: 44px; --r: -60deg; --d: .7s" />
+            {{-- ================= PROMO: SMART CHOICE, SAFE SHOPPING (safebuystore.com match) ================= --}}
+            <section class="sb-mid-sec sb-promo-sec rv" data-reveal aria-labelledby="t-promo">
+                <div class="sb-mid-wrap">
+                    <div class="sb-promo-card">
+                        <div class="sb-promo-grid">
+                            <div class="sb-promo-copy">
+                                <h2 class="sb-promo-title st" id="t-promo" style="--sd: .1s">{{ $promoBanner?->eyebrow ?: 'Smart Choice, Safe Shopping' }}</h2>
+                                <div class="sb-promo-sub st" style="--sd: .22s">
+                                    <span class="sb-promo-star" aria-hidden="true">✦</span>
+                                    <span class="sb-promo-line" aria-hidden="true"></span>
+                                    <span>{{ $promoBanner?->title ?: 'Where Premium K-Beauty Meets Next-Gen Gadgets.' }}</span>
+                                </div>
+                                <p class="sb-promo-desc st" style="--sd: .34s">{{ $promoBanner?->subtitle ?: 'Get the best of both worlds. Grab 100% original Korean skincare and premium tech gadgets at unbeatable prices.' }}</p>
+                                <a class="sb-promo-btn st" style="--sd: .46s" href="{{ $promoBanner?->cta_url ? url($promoBanner->cta_url) : route('shop', ['on_sale' => 1]) }}">
+                                    <span>{{ $promoBanner?->cta_label ?: 'Shop now' }}</span>
+                                    <x-icon name="arrow-right" size="16" />
+                                </a>
+                            </div>
+                            <div class="sb-promo-art st" style="--sd: .25s">
+                                <img class="sb-sway" src="{{ asset($promoBanner?->image ?: 'images/banners/offer-right.png') }}" alt="K-Beauty serum, cream, smart watch, earbuds and headphones" loading="lazy" width="577" height="433">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
             @break
 
         @case('products_tabs')
-            {{-- ================= PRODUCTS (tabs) ================= --}}
-            <section class="sec rv" data-reveal aria-labelledby="t-prod">
-                <div class="wrap">
-                    <div class="phead">
-                        <div>
-                            <div class="eyebrow">{{ $section->eyebrow ?: 'Shop the collection' }}</div>
-                            <h2 class="stitle" id="t-prod" style="margin-top: 8px">{{ $section->title ?: 'Fresh & Trending' }}</h2>
+            {{-- ================= PRODUCT SHOWCASES (New Arrival, Trending K-Beauty, Trending Smart Gadgets — safebuystore.com match) ================= --}}
+            @foreach ($tabs as $tab)
+                @if ($tab['products']->isNotEmpty())
+                <section class="sb-mid-sec sb-prod-sec @if ($loop->first) is-first @endif @if ($loop->last) is-last @endif rv" data-reveal aria-labelledby="t-prod-{{ $tab['key'] }}">
+                    <div class="sb-mid-wrap">
+                        <div class="sb-prod-head">
+                            <h2 class="sb-sec-title" id="t-prod-{{ $tab['key'] }}">{{ $tab['label'] }}</h2>
+                            <a class="sb-view-all" href="{{ $tab['url'] ?? route('shop') }}">View all <x-icon name="arrow-right" size="15" /></a>
                         </div>
-                        <div class="tabs" role="tablist" aria-label="Product groups">
-                            @foreach ($tabs as $tab)
-                                <button class="tab @if ($loop->first) on @endif" type="button" role="tab" id="tab-{{ $tab['key'] }}" aria-controls="panel-{{ $tab['key'] }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}" data-tab="{{ $tab['key'] }}">{{ $tab['label'] }}</button>
+                        <ul class="sb-grid4">
+                            @foreach ($tab['products'] as $product)
+                                <x-product-card :product="$product" :index="$loop->index" />
                             @endforeach
-                        </div>
-                        <a class="vall" href="{{ route('shop') }}">View all <x-icon name="arrow-right" size="14" /></a>
+                        </ul>
                     </div>
-                    @foreach ($tabs as $tab)
-                        <div class="panel" role="tabpanel" id="panel-{{ $tab['key'] }}" aria-labelledby="tab-{{ $tab['key'] }}" data-panel="{{ $tab['key'] }}" @unless ($loop->first) hidden @endunless>
-                            <ul class="track">
-                                @foreach ($tab['products'] as $product)
-                                    <x-product-card :product="$product" :index="$loop->index" />
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endforeach
-                </div>
-            </section>
+                </section>
+                @endif
+            @endforeach
             @break
 
         @case('best_selling')
@@ -371,7 +377,7 @@
                 <div class="wrap">
                 <div class="conc rv" data-reveal aria-labelledby="t-conc">
                     <div class="cbgimg">
-                        <img src="{{ asset($conciergeBanner?->image ?: 'images/banners/concierge-bg.png') }}" alt="Seoul and Tokyo skyline with Korean and Japanese skincare" width="1264" height="848" loading="lazy">
+                        <img src="{{ asset($conciergeBanner?->image ?: 'images/banners/concierge-bg-unique.webp') }}" alt="SafeBuy Concierge global direct air-cargo sourcing for authentic K-Beauty and J-Beauty" width="1264" height="848" loading="lazy">
                         <div class="cargo st" style="--sd: .85s">
                             <span class="cgi"><x-icon name="globe" size="16" /></span>
                             <b>Direct<br>Global Air-Cargo</b>

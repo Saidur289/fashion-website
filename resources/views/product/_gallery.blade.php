@@ -2,15 +2,15 @@
 @php
     $imgs = $product->gallery();
 @endphp
-<div class="gal {{ ($quick ?? false) ? 'is-quick' : '' }}" data-gallery>
+<div class="gal {{ ($quick ?? false) ? 'is-quick' : '' }}" data-gallery data-interval="3.5">
     <div class="gmain">
         <div class="tags">
             @if ($product->is_featured)<span class="tag feat">Featured</span>@endif
-            @if ($product->discount_percent && ! $product->isVariable())<span class="tag off">-{{ $product->discount_percent }}%</span>@endif
+            @if ($product->discount_percent && ! $product->isVariable())<span class="tag off">-{{ $product->discount_percent }}%Off</span>@endif
         </div>
         @foreach ($imgs as $i => $src)
             <button type="button" class="gslide {{ $i === 0 ? 'on' : '' }}" data-gslide="{{ $i }}" data-src="{{ asset($src) }}" aria-label="Enlarge image {{ $i + 1 }}" @if ($i) tabindex="-1" @endif>
-                <img src="{{ asset($src) }}" alt="{{ $i === 0 ? $product->name : '' }}" width="800" height="800" decoding="async" @if ($i) loading="lazy" @else fetchpriority="high" @endif>
+                <img src="{{ asset($src) }}" alt="{{ $i === 0 ? $product->name : '' }}" width="800" height="800" decoding="async" @if ($i === 0) fetchpriority="high" @endif>
             </button>
         @endforeach
         @if (count($imgs) > 1)

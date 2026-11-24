@@ -15,9 +15,9 @@ class HomeController extends Controller
         $base = Product::query()->active()->with(['category', 'brand', 'variants.values.attribute']);
 
         $tabs = [
-            ['key' => 'new', 'label' => 'New Arrival', 'products' => (clone $base)->where('is_new_arrival', true)->get()],
-            ['key' => 'beauty', 'label' => 'Trending K-Beauty', 'products' => (clone $base)->where('is_trending', true)->inGroup(Category::GROUP_BEAUTY)->get()],
-            ['key' => 'gadgets', 'label' => 'Smart Gadgets', 'products' => (clone $base)->where('is_trending', true)->inGroup(Category::GROUP_GADGET)->get()],
+            ['key' => 'new', 'label' => 'New Arrival', 'url' => route('shop', ['sort' => 'latest']), 'products' => (clone $base)->where('is_new_arrival', true)->get()],
+            ['key' => 'beauty', 'label' => 'Trending K-Beauty', 'url' => route('shop', ['group' => 'beauty']), 'products' => (clone $base)->where('is_trending', true)->inGroup(Category::GROUP_BEAUTY)->get()],
+            ['key' => 'gadgets', 'label' => 'Trending Smart Gadgets', 'url' => route('shop', ['group' => 'gadget']), 'products' => (clone $base)->where('is_trending', true)->inGroup(Category::GROUP_GADGET)->get()],
         ];
 
         $maxDiscount = (clone $base)->where('is_new_arrival', true)->get()->max('discount_percent');

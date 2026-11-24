@@ -29,22 +29,21 @@
     $socialIcons = ['facebook' => 'F', 'instagram' => 'IG', 'youtube' => 'YT', 'whatsapp' => 'WA'];
 @endphp
 
-{{-- Row 1: social links + shop info (Hara top bar) --}}
-<div class="htop">
-    <div class="wrap htop-in">
-        <div class="htop-l">
-            @foreach ($social as $net => $url)
-                <a class="soc" href="{{ $net === 'whatsapp' && ! str_starts_with($url, 'http') ? 'https://wa.me/'.preg_replace('/\D/', '', $url) : $url }}" target="_blank" rel="noopener" aria-label="{{ ucfirst($net) }}">{{ $socialIcons[$net] ?? strtoupper(substr($net, 0, 2)) }}</a>
-            @endforeach
-            <span class="htop-msg">{{ config('safebuy.topbar_text', 'Welcome to SafeBuy — 100% authentic K-Beauty & smart gadgets, delivered to your door') }}</span>
+{{-- Row 1: Auto-sliding announcement bar (email & address remain in footer) --}}
+@php
+    $announcement = trim((string) config('safebuy.topbar_text', 'Welcome to SafeBuy — 100% authentic K-Beauty & smart gadgets, delivered to your door'));
+@endphp
+@if ($announcement !== '')
+<div class="htop" role="region" aria-label="Announcement">
+    <div class="htop-marquee">
+        <div class="htop-track">
+            @for ($i = 0; $i < 6; $i++)
+                <span class="htop-item" @if ($i > 0) aria-hidden="true" @endif>{{ $announcement }}<em>◆</em></span>
+            @endfor
         </div>
-        <ul class="htop-r">
-            @if (config('safebuy.hours'))<li><x-icon name="clock" size="14" /> {{ config('safebuy.hours') }}</li>@endif
-            @if (config('safebuy.address'))<li><x-icon name="pin" size="14" /> {{ config('safebuy.address') }}</li>@endif
-            @if (config('safebuy.email'))<li><x-icon name="mail" size="14" /> <a href="mailto:{{ config('safebuy.email') }}">{{ config('safebuy.email') }}</a></li>@endif
-        </ul>
     </div>
 </div>
+@endif
 
 <header class="hdr" data-header>
     {{-- Row 2: logo, category + search, call us, icons --}}

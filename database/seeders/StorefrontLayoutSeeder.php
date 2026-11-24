@@ -28,25 +28,25 @@ class StorefrontLayoutSeeder extends Seeder
     private function seedSections(): void
     {
         $sections = [
-            ['key' => 'hero', 'name' => 'Hero Slider', 'eyebrow' => null, 'title' => null, 'subtitle' => null],
-            ['key' => 'categories', 'name' => 'Categories Grid', 'eyebrow' => null, 'title' => 'Beauty & Lifestyle Essentials', 'subtitle' => null],
-            ['key' => 'promo', 'name' => 'Offer Promo Banner', 'eyebrow' => null, 'title' => null, 'subtitle' => null],
-            ['key' => 'products_tabs', 'name' => 'Fresh & Trending Tabs', 'eyebrow' => 'Shop the collection', 'title' => 'Fresh & Trending', 'subtitle' => null],
-            ['key' => 'best_selling', 'name' => 'Best Selling Products', 'eyebrow' => 'Customer favourites', 'title' => 'Best Selling', 'subtitle' => null],
-            ['key' => 'why_shop', 'name' => 'Why Shop with SafeBuy', 'eyebrow' => null, 'title' => 'Why Shop with SafeBuy?', 'subtitle' => null],
-            ['key' => 'twin_banners', 'name' => 'Twin Category Banners', 'eyebrow' => null, 'title' => null, 'subtitle' => null],
-            ['key' => 'budget', 'name' => 'Budget Picks (Under Tk X)', 'eyebrow' => 'Small price, real thing', 'title' => null, 'subtitle' => null],
-            ['key' => 'routine', 'name' => 'Shop by Routine (Progress Bars)', 'eyebrow' => 'Build your routine', 'title' => 'Everything Your Skin & Day Needs', 'subtitle' => 'From morning sunscreen to a charged phone by night, pick a step and see what we have in stock.'],
-            ['key' => 'concierge', 'name' => 'SafeBuy Concierge Showcase', 'eyebrow' => null, 'title' => null, 'subtitle' => null],
-            ['key' => 'philosophy', 'name' => 'Brand Philosophy & Counterfeit Compare', 'eyebrow' => 'Our brand philosophy', 'title' => 'Smart Choice, Uncompromised Trust.', 'subtitle' => null],
-            ['key' => 'testimonials', 'name' => 'Customer Testimonials', 'eyebrow' => 'Testimonials', 'title' => 'What Our Clients Say', 'subtitle' => null],
-            ['key' => 'brands_marquee', 'name' => 'Trusted Brand Partners Marquee', 'eyebrow' => null, 'title' => 'Trusted brand partners', 'subtitle' => null],
+            ['key' => 'hero', 'name' => 'Hero Slider', 'eyebrow' => null, 'title' => null, 'subtitle' => null, 'is_active' => true],
+            ['key' => 'categories', 'name' => 'Beauty & Lifestyle Essentials', 'eyebrow' => null, 'title' => 'Beauty & Lifestyle Essentials', 'subtitle' => null, 'is_active' => true],
+            ['key' => 'promo', 'name' => 'Offer Promo Banner', 'eyebrow' => null, 'title' => null, 'subtitle' => null, 'is_active' => true],
+            ['key' => 'products_tabs', 'name' => 'New Arrival & Trending Showcases', 'eyebrow' => null, 'title' => 'New Arrival', 'subtitle' => null, 'is_active' => true],
+            ['key' => 'best_selling', 'name' => 'Best Selling Products', 'eyebrow' => 'Customer favourites', 'title' => 'Best Selling', 'subtitle' => null, 'is_active' => false],
+            ['key' => 'why_shop', 'name' => 'Why Shop with SafeBuy', 'eyebrow' => null, 'title' => 'Why Shop with SafeBuy?', 'subtitle' => null, 'is_active' => false],
+            ['key' => 'twin_banners', 'name' => 'Twin Category Banners', 'eyebrow' => null, 'title' => null, 'subtitle' => null, 'is_active' => false],
+            ['key' => 'budget', 'name' => 'Budget Picks (Under Tk X)', 'eyebrow' => 'Small price, real thing', 'title' => null, 'subtitle' => null, 'is_active' => false],
+            ['key' => 'routine', 'name' => 'Shop by Routine (Progress Bars)', 'eyebrow' => 'Build your routine', 'title' => 'Everything Your Skin & Day Needs', 'subtitle' => 'From morning sunscreen to a charged phone by night, pick a step and see what we have in stock.', 'is_active' => false],
+            ['key' => 'concierge', 'name' => 'SafeBuy Concierge Showcase', 'eyebrow' => null, 'title' => null, 'subtitle' => null, 'is_active' => true],
+            ['key' => 'philosophy', 'name' => 'Brand Philosophy & Counterfeit Compare', 'eyebrow' => 'Our brand philosophy', 'title' => 'Smart Choice, Uncompromised Trust.', 'subtitle' => null, 'is_active' => true],
+            ['key' => 'testimonials', 'name' => 'Customer Testimonials', 'eyebrow' => 'Testimonials', 'title' => 'What Our Clients Say', 'subtitle' => null, 'is_active' => true],
+            ['key' => 'brands_marquee', 'name' => 'Trusted Brand Partners Marquee', 'eyebrow' => null, 'title' => 'Trusted brand partners', 'subtitle' => null, 'is_active' => true],
         ];
 
         foreach ($sections as $idx => $s) {
             HomeSection::firstOrCreate(
                 ['key' => $s['key']],
-                $s + ['sort_order' => $idx + 1, 'is_active' => true]
+                $s + ['sort_order' => $idx + 1]
             );
         }
     }
@@ -147,7 +147,7 @@ class StorefrontLayoutSeeder extends Seeder
                 'subtitle' => "Can't find your favorite authentic Korean or Japanese skincare product anywhere in Bangladesh? Stop scrolling and let our global sourcing team fly it directly to you.",
                 'cta_label' => 'Launch concierge request',
                 'cta_url' => '/concierge',
-                'image' => 'images/banners/concierge-bg.png',
+                'image' => 'images/banners/concierge-bg-unique.webp',
                 'theme' => 'dark',
                 'sort_order' => 4,
             ],
